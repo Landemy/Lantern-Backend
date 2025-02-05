@@ -8,8 +8,15 @@ exports.submitStudentDetails = async (req, res) => {
         console.log(req.body);
 
         // Validate required fields
-        if (!fullName || !phoneNumber || !email || !location || !selectedCourse) {
+        if (!fullName || !phoneNumber || !email || !location || !selectedCourse || !Array.isArray(selectedCourse) || selectedCourse.length === 0) {
             return res.status(400).json({ error: 'All required fields must be filled.' });
+        }
+
+        // debug sponsor field
+        if (sponsor) {
+            console.log(`Sponsor: ${sponsor}`);
+        } else {
+            console.log('No sponsor');
         }
 
         // Check if the email is already registered
