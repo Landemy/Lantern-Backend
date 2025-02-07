@@ -4,11 +4,11 @@ const sendEmail = require('../utils/sendEmail');
 // Submit Student Details
 exports.submitStudentDetails = async (req, res) => {
     try {
-        const { fullName, phoneNumber, email, location, sponsor, selectedCourse } = req.body;
+        const { fullName, phoneNumber, email, location, sponsor, selectedCourses } = req.body;
         console.log(req.body);
 
         // Validate required fields
-        if (!fullName || !phoneNumber || !email || !location || !selectedCourse) {
+        if (!fullName || !phoneNumber || !email || !location || !selectedCourses) {
             return res.status(400).json({ error: 'All required fields must be filled.' });
         }
 
@@ -25,7 +25,7 @@ exports.submitStudentDetails = async (req, res) => {
             email,
             location,
             sponsor: sponsor || null, // Optional field
-            selectedCourse,
+            selectedCourses,
         });
         console.log(student);
        await student.save();
@@ -54,7 +54,7 @@ exports.submitStudentDetails = async (req, res) => {
             Phone: ${phoneNumber}
             Location: ${location}
             Sponsor: ${sponsor || 'N/A'}
-            Course: ${selectedCourse}
+            Course: ${selectedCourses}
         `;
         await sendEmail(adminEmail, adminSubject, adminMessage);
 
