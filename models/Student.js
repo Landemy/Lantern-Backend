@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 
-
 const studentSchema = new mongoose.Schema({
-    fullName: {  type: String, required: true },
+    fullName: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     location: { type: String, required: true },
-    sponsor: { type: String, default: null},
+    sponsor: { type: String, default: null },
     selectedCourses: {
-        type: String, 
+        type: [String],  // ✅ Change from String to Array of Strings
         enum: [
             "Software Engineering",
             "ICAN",
@@ -18,7 +17,7 @@ const studentSchema = new mongoose.Schema({
             "IELTS",
             "Digital Marketing",
             "Project Management",
-            "Virtual Asistant"
+            "Virtual Assistant"
         ],
         required: true
     },
@@ -26,6 +25,4 @@ const studentSchema = new mongoose.Schema({
     verificationToken: { type: String }
 }, { timestamps: true });
 
-
-
-module.exports =  mongoose.model('Student', studentSchema);
+module.exports = mongoose.model('Student', studentSchema);
