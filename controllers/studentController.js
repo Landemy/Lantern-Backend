@@ -28,24 +28,23 @@ exports.submitStudentDetails = async (req, res) => {
             selectedCourses,
         });
         console.log(student);
-        await student.save();
+       await student.save();
 
-        // Send verification email from the student email
-        const studentEmail = process.env.STUDENT_EMAIL || 'students@lantern.academy';
+        // Send verification email
+        const from = process.env.STUDENT_EMAIL || 'no-reply@yourdomain.com'; // Fallback for sender email
         const subject = 'Please Verify Your Email';
         const message = `
+            
+            
             Thank you for submitting your details.
-
-            Kindly verify your email address by clicking on the link below:
-            Link: https://lantern.academy/?verify=student568785hfrdkgk
 
             Best regards,
             Lantern Academy
         `;
-        await sendEmail(email, subject, message, studentEmail);
+        await sendEmail(email, subject, message, from);
 
-        // Notification for admin (sent from the default email)
-        const adminEmail = process.env.STUDENT_EMAIL;
+        // Notification for admin
+        const adminEmail = process.env.EMAIL_USERNAME;
         const adminSubject = 'New Student Registration Submitted';
         const adminMessage = `
             A new student application has been submitted.
@@ -57,9 +56,10 @@ exports.submitStudentDetails = async (req, res) => {
             Sponsor: ${sponsor || 'N/A'}
             Course: ${selectedCourses}
         `;
-        await sendEmail(adminEmail, adminSubject, adminMessage, studentEmail);
+        await sendEmail(adminEmail, adminSubject, adminMessage);
 
         res.status(201).json({ message: 'Student details submitted successfully.' });
+
 
     } catch (error) {
         console.error('Error submitting student form:', error);

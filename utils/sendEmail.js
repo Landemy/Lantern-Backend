@@ -1,14 +1,15 @@
 const nodemailer = require('nodemailer');
 
-const sendEmail = async (to, subject, message, from) => {
+const sendEmail = async (to, subject, message, from = process.env.EMAIL_USERNAME) => {
     try {
         const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST, // Use the SMTP host
-            port: process.env.EMAIL_PORT, // Use the SMTP port
-            secure: process.env.EMAIL_PORT == 465, // SSL if port is 465
+            service: 'gmail',
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT,
+            secure: process.env.EMAIL_PORT == 465, // SSL
             auth: {
-                user: from, // Sender email
-                pass: process.env.EMAIL_PASSWORD, // Use the same password for authentication
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD,
             },
             debug: true,  // Detailed logs
             logger: true, // SMTP transaction logs
