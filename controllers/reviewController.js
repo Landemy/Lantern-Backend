@@ -5,22 +5,22 @@ exports.submitReview = async (req, res) => {
     try {
         const { message } = req.body;
 
-        // these validate user input
+        // Validate user input
         if (!message) {
             return res.status(400).json({ error: 'All fields are required.' });
         }
-        // create and save the review data
-        const review = new Review({ message }); 
+
+        // Create and save the review data
+        const review = new Review({ message });
         await review.save();
 
-        // send notification
-        const adminEmail = process.env.REVIEW_EMAIL;
+        // Send notification email from the review email
+        const reviewEmail = process.env.REVIEW_EMAIL || 'reviews@lantern.academy';
         const subject = 'New Review Submitted';
         const text = `A new review has been submitted:\n\n${message}`;
 
-
         // Send notification email to Lantern Academy
-        await sendEmail('Lanternacademyreg@gmail.com', 'New Review Submitted', adminEmail, subject, text);
+        await sendEmail('reviews@lantern.academy', subject, text, reviewEmail);
 
         res.status(201).json({ message: 'Review submitted successfully.' });
     } catch (error) {

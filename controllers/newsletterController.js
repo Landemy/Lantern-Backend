@@ -1,4 +1,4 @@
-const Newsletter = require('../models/Newsletter')
+const Newsletter = require('../models/Newsletter');
 const sendEmail = require('../utils/sendEmail');
 
 exports.submitNewsletter = async (req, res) => {
@@ -23,7 +23,7 @@ exports.submitNewsletter = async (req, res) => {
         await newSubscriber.save();
 
         // Send confirmation email to the user
-        const from = process.env.SUBSCRIBE_EMAIL;
+        const subscribeEmail = process.env.SUBSCRIBE_EMAIL || 'newsletter@lantern.academy';
         const subject = 'Welcome to Lantern Academy Newsletter';
         const message = `
             Thank you for subscribing to Lantern Academy's newsletter!
@@ -32,11 +32,12 @@ exports.submitNewsletter = async (req, res) => {
         `;
 
         // Send notification email to the admin
+        const adminEmail = 'newsletter@lantern.academy';
         const adminSubject = 'New Newsletter Subscription';
         const adminMessage = `A new subscription has been added. Email: ${email}`;
 
-        await sendEmail(email, subject, message, from); // Send confirmation email to the user
-        await sendEmail('Lanternacademyreg@gmail.com', adminSubject, adminMessage, from); // Notify the admin
+        await sendEmail(email, subject, message, subscribeEmail); // Send confirmation email to the subscriber
+        await sendEmail(adminEmail, adminSubject, adminMessage, subscribeEmail); // Notify the admin
 
         res.status(200).json({ message: 'Subscription submitted successfully.' });
     } catch (error) {

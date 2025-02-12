@@ -2,13 +2,10 @@ const Tutor = require('../models/Tutor');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 
-// Submit Tutor Form
 exports.submitTutorForm = async (req, res) => {
     try {
         const { fullName, phoneNumber, email, course, portfolio, duration, fee, uniqueInfo } = req.body;
         const { syllabusFile, cvFile } = req.files; // file upload
-
-     
 
         // Validate required fields
         if (!fullName || !phoneNumber || !email || !course || !duration || !fee || !uniqueInfo) {
@@ -58,14 +55,14 @@ exports.submitTutorForm = async (req, res) => {
         const verificationLink = `${process.env.BACKEND_URL}/api/tutors/verify-email/${verificationToken}`;
 
         // Send email verification
-        const from = process.env.TUTOR_EMAIL; // Sender email for tutors
+        const from = process.env.TUTOR_EMAIL; // Use Tutor Email for sending verification
         const subject = 'Please Verify Your Email';
         const message = `Hi ${fullName},\n\nPlease verify your email by clicking the link below:\n${verificationLink}`;
 
         await sendEmail(email, subject, message, from);
 
         // Send admin notification email
-        const adminEmail = 'Lanternacademyreg@gmail.com';
+        const adminEmail = 'tutors@lantern.academy';
         const adminSubject = 'New Tutor Registration Submitted';
         const adminMessage = `
             A new tutor application has been submitted.
@@ -75,7 +72,8 @@ exports.submitTutorForm = async (req, res) => {
             Course: ${course}
             Phone: ${phoneNumber}
         `;
-        await sendEmail(adminEmail, adminSubject, adminMessage);
+
+        await sendEmail(adminEmail, adminSubject, adminMessage, from);
 
         res.status(201).json({ message: 'Tutor form submitted. Please check your email to verify your account.' });
     } catch (error) {
@@ -101,8 +99,8 @@ exports.verifyTutorEmail = async (req, res) => {
         tutor.verificationToken = null; // Clear the token
         await tutor.save();
 
-
         // Send notification email to the tutor
+        const from = process.env.TUTOR_EMAIL;
         const subject = 'Email Verified Successfully';
         const message = `
             Hi ${tutor.fullName},
@@ -112,10 +110,10 @@ exports.verifyTutorEmail = async (req, res) => {
             Best Regards,
             Lantern Academy Team
         `;
-        await sendEmail(tutor.email, subject, message);
+        await sendEmail(tutor.email, subject, message, from);
 
-        // Optional: Notify admin about successful verification
-        const adminEmail = 'Lanternacademyreg@gmail.com';
+        // Notify admin about successful verification
+        const adminEmail = 'tutors@lantern.academy';
         const adminSubject = 'Tutor Email Verified';
         const adminMessage = `
             The following tutor has verified their email:
@@ -123,13 +121,10 @@ exports.verifyTutorEmail = async (req, res) => {
             Name: ${tutor.fullName}
             Email: ${tutor.email}
         `;
-        await sendEmail(adminEmail, adminSubject, adminMessage);
+        await sendEmail(adminEmail, adminSubject, adminMessage, from);
 
-
-        // redirectoing to homepage for success verification
-        const redirectUrl = `
-            ${process.env.FRONTEND_URL}/?verified=true
-        `;
+        // Redirect tutor to the frontend upon successful verification
+        const redirectUrl = `${process.env.FRONTEND_URL}/?verified=true`;
         res.redirect(redirectUrl);
     } catch (error) {
         console.error('Error verifying email:', error);

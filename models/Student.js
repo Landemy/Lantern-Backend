@@ -5,19 +5,27 @@ const studentSchema = new mongoose.Schema({
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     location: { type: String, required: true },
-    sponsor: { type: String, default: null },
+    sponsor: {
+        type: String,
+        enum: ["Myself", "Other"],  // ✅ Updated to match the frontend dropdown
+        default: "Myself"
+    },
     selectedCourses: {
-        type: [String],  // ✅ Change from String to Array of Strings
+        type: [String],
         enum: [
-            "Software Engineering",
-            "ICAN",
+            "Frontend Development",
+            "ATS/ICAN",
             "GMAT",
+            "UI/UX Design",
             "Data Science/Analytics",
             "Backend Development",
+            "Full Stack Development",
             "IELTS",
             "Digital Marketing",
             "Project Management",
-            "Virtual Assistant"
+            "Virtual Assistant",
+            "Cyber Security",
+            "Network Engineering"
         ],
         required: true
     },
