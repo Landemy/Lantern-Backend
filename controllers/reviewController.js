@@ -14,13 +14,12 @@ exports.submitReview = async (req, res) => {
         await review.save();
 
         // send notification
-        const adminEmail = process.env.REVIEW_EMAIL;
+        const adminEmail = process.env.EMAIL_USERNAME;
         const subject = 'New Review Submitted';
         const text = `A new review has been submitted:\n\n${message}`;
 
-
         // Send notification email to Lantern Academy
-        await sendEmail('Lanternacademyreg@gmail.com', 'New Review Submitted', adminEmail, subject, text);
+        await sendEmail('Lanternacademyreg@gmail.com', 'New Review Submitted', adminEmail, subject, text, message);
 
         res.status(201).json({ message: 'Review submitted successfully.' });
     } catch (error) {
