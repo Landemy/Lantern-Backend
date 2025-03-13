@@ -13,19 +13,7 @@ const studentSchema = new mongoose.Schema({
     selectedCourses: {
         type: [String],
         enum: [
-            "Frontend Development",
-            "ATS/ICAN",
-            "GMAT",
-            "UI/UX Design",
-            "Data Science/Analytics",
-            "Backend Development",
-            "Full Stack Development",
-            "IELTS",
-            "Digital Marketing",
-            "Project Management",
-            "Virtual Assistant",
-            "Cyber Security",
-            "Network Engineering"
+            "UI/UX Design", "Data Science/Analytics", "Frontend Development", "Backend Development", "Full Stack Development", "ATS/ICAN", "GMAT", "IELTS", "Digital Marketing", "Project Management", "Virtual Assistant", "Cyber Security", "Network Engineering", "Mathematics", "English Language", "Physics", "Chemistry", "Biology", "Financial Accounting", "Literature in English"
         ],
         required: true
     },
