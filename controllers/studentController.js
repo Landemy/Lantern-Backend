@@ -31,7 +31,7 @@ exports.submitStudentDetails = async (req, res) => {
        await student.save();
 
         // Send verification email
-        const from = process.env.STUDENT_EMAIL || 'no-reply@yourdomain.com'; // Fallback for sender email
+        const from = process.env.EMAIL_USERNAME || 'no-reply@yourdomain.com'; // Fallback for sender email
         const subject = 'Please Verify Your Email';
         const message = `
             
