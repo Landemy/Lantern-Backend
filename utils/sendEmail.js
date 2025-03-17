@@ -1,7 +1,27 @@
 const nodemailer = require('nodemailer');
 
-const sendEmail = async (to, subject, message, from = process.env.EMAIL_USERNAME) => {
+const sendEmail = async (to, subject, message, section = 'DEFAULT') => {
+
     try {
+        // we select the sender email based for each sections
+        let senderEmail;
+        switch (section){
+            case 'STUDENT':
+                senderEmail =  process.env.STUDENT_EMAIL;
+                break;
+            case 'TUTOR':
+                senderEmail =  process.env.TUTOR_EMAIL;
+                break;
+            case 'REVIEW':
+                senderEmail =  process.env.REVIEW_EMAIL;
+                break;
+            case 'NEWSLETTER':
+                senderEmail =  process.env.SUBSCRIBE_EMAIL;
+                break;
+            default:
+                senderEmail = process.env.EMAIL_USERNAME;
+
+        }
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             host: process.env.EMAIL_HOST,
